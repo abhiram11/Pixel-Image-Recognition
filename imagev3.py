@@ -1,3 +1,4 @@
+from collections import Counter
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -60,41 +61,41 @@ def threshold(imageArray): #VALUE above threshold will be black and below will b
 
 
 
+def whatNumIsThis(filePath):
+	matchedArray = [] #matches will be stored in this array
+	#this is basic idea of neural networks
+	loadExamples = open('numArEx.txt','r').read()
+	loadExamples = loadExamples.split('\n')
 
-i = Image.open('images/numbers/0.1.png')
-iar = np.array(i)
-
-i2 = Image.open('images/numbers/y0.4.png')
-iar2 = np.array(i2)
-
-i3 = Image.open('images/numbers/y0.5.png')
-iar3 = np.array(i3)
-
-i4 = Image.open('images/sentdex.png')
-iar4 = np.array(i4)
+	i = Image.open(filePath)
+	iar = np.array(i)
+	iarl = iar.tolist()
 	
-'''
-threshold(iar2)
-threshold(iar3)
-threshold(iar4)
+	inQuestion = str(iarl)
 
-fig = plt.figure()
-ax1 = plt.subplot2grid((8,6),(0,0), rowspan=4, colspan=3)
+	for eachExample in loadExamples: 
+		if len(eachExample)>3: #to avoid blank lines
+			splitEx = eachExample.split('::')
+			currentNum = splitEx[0] #first element
+			currentArray = splitEx[1] #for whole array of item
+#to compare pixel to pixel
+			eachPixEx = currentArray.split('],') #to split every 4 element waali array
 
-ax2 = plt.subplot2grid((8,6),(4,0), rowspan=4, colspan=3)
+			eachPixINQues = inQuestion.split('],')
+			
 
-ax3 = plt.subplot2grid((8,6),(0,3), rowspan=4, colspan=3)
+			#while loop cuz we dont know how long the loop will run
+			x=0;
+			while x<len(eachPixEx):
+				if eachPixEx[x] ==  eachPixINQues[x]: #x index
+					matchedArray.append(int(currentNum)) #append that integer to the empty matched array
 
-ax4 = plt.subplot2grid((8,6),(4,3), rowspan=4, colspan=3)
+				x+=1
+	
+	print(matchedArray)					
 
-ax1.imshow(iar)
-ax2.imshow(iar2)
-ax3.imshow(iar3)
-ax4.imshow(iar4)
+	x = Counter(matchedArray) #eg. for [1,2,3,1,1,2,1,3,4] counter will give output {1:4,2:2,3:2,4:1}
+	print (x)
 
-plt.show()
-
-
-
-
-'''
+whatNumIsThis('images/test.png') #draw any number like digit and save it as test.png in this folder and run the code..
+#the counter function will show the number the test image is most probably related to
